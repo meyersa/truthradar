@@ -51,6 +51,9 @@ def check():
     logging.info("Valid API Key")
     id = create_result(input_text)
 
+    if not id: 
+        return jsonify({'error': 'Failed to create result'})
+
     logging.info(f"Returning ID: {id}")
     return jsonify({'id': id})
 

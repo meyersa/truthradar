@@ -17,6 +17,9 @@ def test(res: Result) -> Result | None:
     result = int(result) 
     reason = str(reason) 
 
+    logging.debug("Result: ", result)
+    logging.debug("Reason: ", reason)
+    
     if not (verify_result(result) and verify_reason(reason)):
         logging.warn("Unable to verify the response from the model")
         return None

@@ -3,8 +3,11 @@
   <div class="bannerText">
     <h1>TruthRadar</h1>
     <p>Check to see if what you are reading is <span class="decorated">Truthful</span> or not.</p>
-    <p>Using <span class="decorated">Machine Learning</span> we can determine the truth and get to the bottom of claims made online.</p>
-    <img class="bannerImg" src="{{ url_for('static', filename='demo.png') }}" height="300">
+    <p>
+      Using <span class="decorated">Machine Learning</span> we can determine the truth and get to the bottom of claims
+      made online.
+    </p>
+    <img class="bannerImg" src="{{ url_for('static', filename='demo.png') }}" height="300" />
   </div>
   <div class="bannerInput">
     <textarea class="input" id="input" placeholder="Want to know if it's true? Past a link or URL"></textarea>
@@ -23,14 +26,12 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-
   }
 
   .bannerInput:hover,
   .bannerInput:focus {
     box-shadow: 0 4px 12px rgba(60, 64, 67, 0.3), 0 16px 32px rgba(60, 64, 67, 0.15);
   }
-
 
   .input {
     border: none;
@@ -63,11 +64,10 @@
     border-top: 1px solid var(--green);
   }
   .loading {
-    color: var(--light)
-    
+    color: var(--light);
   }
   .loading:hover {
-    color: inherit
+    color: inherit;
   }
 </style>
 <script>
@@ -85,12 +85,21 @@
     })
       .then((response) => response.json())
       .then((data) => {
-        const id = data.id;
-        setTimeout(() => {
-          window.location.href = "/result?id=" + encodeURIComponent(id);
-        }, 5000);
+        if (data.status === "error") {
+          button.style.backgroundColor = "var(--red)";
+          button.textContent = "Try Again";
+        } else {
+          const id = data.id;
+          setTimeout(() => {
+            window.location.href = "/result?id=" + encodeURIComponent(id);
+          }, 5000);
+        }
       })
-      .catch((err) => console.log("Error: " + err));
+      .catch((err) => {
+        console.log("Error: " + err);
+        button.style.backgroundColor = "var(--red)";
+        button.textContent = "Try Again";
+      });
   });
 </script>
 {% endblock %}

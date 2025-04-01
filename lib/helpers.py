@@ -23,16 +23,26 @@ def create_result(input: str) -> str:
     """
     id = hash_text(input)
     logging.info(f"Creating result: {id}")
-
     res = Result(id=id, input=input)
-    res = get_input(res)
-    res = get_title(res)
-    res = test(res)
 
+    res = get_input(res)
+    if not res: 
+        logging.warn("Failed to get input")
+        return None 
+    
+    res = get_title(res)
+    if not res: 
+        logging.warn("Failed to get title")
+        return None 
+    
+    res = test(res)
+    if not res: 
+        logging.warn("Failed to run test")
+        return None 
+    
     logging.info(f"Result created for: {id}")
     save_result(res)
     return id
-
 
 def save_result(res: Result) -> bool:
     """
