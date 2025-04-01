@@ -36,7 +36,5 @@ class TestTest(unittest.TestCase):
         in_res = Result(id=12345, input="", content="Joe Biden was the first female president")
         res = test(in_res)
 
-        print("RES ", res)
-
         self.assertGreater(res.result, 75)
         self.assertGreater(len(res.reason), 100)
