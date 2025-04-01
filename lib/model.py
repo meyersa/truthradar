@@ -17,11 +17,12 @@ def test(res: Result) -> Result | None:
     result = int(result) 
     reason = str(reason) 
 
-    logging.debug("Result: ", result)
-    logging.debug("Reason: ", reason)
+    if not verify_result(result):
+        logging.warn(f"Unable to verify the result from the model:\n{result}")
+        return None
     
-    if not (verify_result(result) and verify_reason(reason)):
-        logging.warn("Unable to verify the response from the model")
+    if not verify_reason(reason): 
+        logging.warn(f"Unable to verify the reason from the model:\n{reason}")
         return None
 
     logging.info("Returning result with summarization")
@@ -35,7 +36,7 @@ def verify_result(result: int) -> bool:
     """
     Verify an inputted result to be within spec 
     """
-    if not result or type(result) is not int:
+    if type(result) is not int:
         return False
 
     return 0 <= result <= 100
@@ -45,7 +46,7 @@ def verify_reason(reason: str) -> bool:
     """
     Verify an inputted reason is within spec
     """
-    if not reason or type(reason) is not str:
+    if type(reason) is not str:
         return False
 
     return 0 < len(reason) < 1000
