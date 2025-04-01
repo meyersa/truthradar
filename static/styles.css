@@ -76,3 +76,13 @@ i:hover {
   color: var(--lightgreen);
 
 }
+
+@media (max-width: 480px) {
+  img.bannerImg {
+    display: none;
+  }
+  section.banner {
+    flex-direction: column-reverse;
+    text-align: center;
+  }
+}
