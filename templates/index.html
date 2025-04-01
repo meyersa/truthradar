@@ -10,8 +10,6 @@
     <button id="submit"><h3>Submit</h3></button>
   </div>
 </section>
-{% endblock %}
-
 <script>
   document.getElementById("submit").addEventListener("click", () => {
     const input = document.getElementById("input").value;
@@ -23,7 +21,13 @@
       body: JSON.stringify({ text: input, key: key }),
     })
       .then((response) => response.json())
-      .then((data) => alert("Result: " + data.result))
+      .then((data) => {
+        const id = data.id;
+        setTimeout(() => {
+          window.location.href = "/result?id=" + encodeURIComponent(id);
+        }, 10000); // 10 seconds
+      })
       .catch((err) => alert("Error: " + err));
   });
 </script>
+{% endblock %}
