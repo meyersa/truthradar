@@ -13,3 +13,10 @@ Fact checking powered by machine learning. Paste a link or text and Truth Radar 
 ## Testing 
 
 > python -m unittest discover -s tests
+
+## ENVs 
+
+- `OPENAI_API_KEY`: OpenAI key for ChatGPT queries 
+- `API_KEY`: To restrict usage of site
+- `MONGO_DB`: MongoDB to connect to
+- `MONGO_URL`: MongoDB URL to use to connect with
