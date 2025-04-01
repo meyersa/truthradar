@@ -40,6 +40,8 @@ section.banner {
   flex-direction: row;
   flex-grow: 1;
   margin: 3rem 3rem;
+  gap: 3rem;
+  
 }
 
 section.banner > div:first-child {
@@ -49,6 +51,7 @@ section.banner > div:first-child {
 
 section.banner > div:last-child {
   flex-grow: 2;
+  min-width: 30dvw;
 
 }
 
