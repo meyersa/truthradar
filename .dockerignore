@@ -1,0 +1,6 @@
+tests
+.github
+.venv
+.gitignore
+Dockerfile
+README.md
