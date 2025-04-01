@@ -17,7 +17,7 @@ class Result:
     :param reason: Explanation or reason for the result.
     """
     # On creation
-    id: int
+    id: str
     input: str
     timestamp: datetime = field(default_factory=datetime.now)
 

@@ -3,7 +3,7 @@ import unittest
 
 class TestResult(unittest.TestCase): 
     def test_class_init(self): 
-        res = Result(id=12345, input="Testing")
+        res = Result(id="12345", input="Testing")
 
         self.assertIsNotNone(res.id)
         self.assertIsNotNone(res.input)
