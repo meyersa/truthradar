@@ -14,11 +14,11 @@ def test(res: Result) -> Result | None:
 
     [result, reason] = query(res.content)
 
-    print("RESULT: ", result)
-    print("REASON: ", reason)
+    result = int(result) 
+    reason = str(reason) 
 
     if not (verify_result(result) and verify_reason(reason)):
-        logging.warn("Unable to verify the results from the model")
+        logging.warn("Unable to verify the response from the model")
         return None
 
     logging.info("Returning result with summarization")
@@ -35,7 +35,7 @@ def verify_result(result: int) -> bool:
     if not result or type(result) is not int:
         return False
 
-    return 0 < result < 101
+    return 0 <= result <= 100
 
 
 def verify_reason(reason: str) -> bool:
