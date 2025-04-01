@@ -71,7 +71,20 @@
   }
 </style>
 <script>
-  document.getElementById("submit").addEventListener("click", () => {
+  window.onload = function () {
+    document.getElementById("input").focus();
+  };
+
+  document.getElementById("submit").addEventListener("click", submitForm);
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      submitForm();
+    }
+  });
+
+  function submitForm() {
     const button = document.getElementById("submit");
     button.innerHTML = '<i class="fas fa-spinner fa-spin loading"></i>';
 
@@ -88,6 +101,7 @@
         if (data.status === "error") {
           button.style.backgroundColor = "var(--red)";
           button.textContent = "Try Again";
+          return;
         } else {
           const id = data.id;
           setTimeout(() => {
@@ -100,6 +114,6 @@
         button.style.backgroundColor = "var(--red)";
         button.textContent = "Try Again";
       });
-  });
+  }
 </script>
 {% endblock %}

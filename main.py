@@ -12,6 +12,7 @@ app = Flask(__name__)
 
 API_KEY = os.getenv("API_KEY")
 
+
 @app.route("/")
 def home():
     """
@@ -46,13 +47,13 @@ def check():
     logging.info(f"Received a request with key: {api_key}")
     if api_key != API_KEY:
         logging.info("Invalid API Key")
-        return jsonify({"Error": "No access"})
+        return jsonify({'status': "error", 'error': "No access"})
 
     logging.info("Valid API Key")
     id = create_result(input_text)
 
-    if not id: 
-        return jsonify({'error': 'Failed to create result'})
+    if not id:
+        return jsonify({'status': "error", 'error': "Failed to create result"})
 
     logging.info(f"Returning ID: {id}")
     return jsonify({'id': id})
