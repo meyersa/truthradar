@@ -6,6 +6,10 @@
     <p><span class="link">{{ result.link }}</span></p>
     {% endif %}
     <p>{{ result.reason }}</p>
+    <p class="mute">
+      Scores closer to 0 indicate higher likelihood of truth. Scores between 33-66 suggest uncertainty. Scores above 66
+      indicate it's likely not true.
+    </p>
   </div>
   <div class="resultScore">
     {% if result.result < 33 %}
@@ -18,10 +22,6 @@
     <h2 id="not_truth">Not Truth</h2>
     <p id="result"><span id="not_truth">{{ result.result }}</span>/100</p>
     {% endif %}
-    <p>
-      Scores closer to 0 indicate higher likelihood of truth. Scores between 33-66 suggest uncertainty. Scores above 66
-      indicate it's likely not true.
-    </p>
   </div>
 </section>
 <style>
@@ -39,12 +39,17 @@
   }
   #result {
     font-size: 300%;
+    margin: 0;
+  }
+  .resultScore {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .link {
+    font-style: italic;
 
-}
-.resultScore {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  }
+
 </style>
 {% endblock %}

@@ -2,7 +2,8 @@
 <section class="banner">
   <div class="bannerText">
     <h1>TruthRadar</h1>
-    <p>Check to see if what you are reading is <span class="decorated">truthful</span> or not</p>
+    <p>Check to see if what you are reading is <span class="decorated">Truthful</span> or not.</p>
+    <p>Using <span class="decorated">Machine Learning</span> we can determine the truth and get to the bottom of claims made online.</p>
   </div>
   <div class="bannerInput">
     <textarea class="input" id="input" placeholder="Want to know if it's true? Past a link or URL"></textarea>
@@ -10,6 +11,73 @@
     <button id="submit"><h3>Submit</h3></button>
   </div>
 </section>
+<style>
+  /* .bannerText::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 125%;
+    height: 200%;
+    background: lightgreen;
+    background-image: url("/static/background.png");
+    border-radius: 10px;
+    z-index: -1;
+    filter: brightness(1.5) opacity(0.75);
+  } */
+  /* .bannerText {
+    position: relative;
+    min-width: 40%;
+  } */
+
+  .bannerInput {
+    background-color: var(--light);
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3), 0 4px 8px rgba(60, 64, 67, 0.15);
+    transition: all 0.3s ease;
+    resize: none;
+    vertical-align: top;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 30dvw;
+  }
+
+  .bannerInput:hover,
+  .bannerInput:focus {
+    box-shadow: 0 4px 12px rgba(60, 64, 67, 0.3), 0 16px 32px rgba(60, 64, 67, 0.15);
+  }
+
+  .input {
+    border: none;
+    outline: none;
+    padding: 10px;
+    background-color: var(--light);
+    resize: none;
+  }
+
+  #input {
+    flex-basis: 80%;
+  }
+
+  #input::placeholder {
+    vertical-align: top;
+  }
+
+  #submit {
+    outline: none;
+    border: none;
+    background-color: var(--green);
+    color: var(--light);
+  }
+  #submit:hover {
+    background-color: var(--lightgreen);
+  }
+
+  #key {
+    border-top: 1px solid var(--green);
+  }
+</style>
 <script>
   document.getElementById("submit").addEventListener("click", () => {
     const input = document.getElementById("input").value;
