@@ -1,0 +1,29 @@
+{% extends "layout.html" %} {% block content %}
+<section class="banner">
+  <div class="bannerText">
+    <h1>TruthRadar</h1>
+    <p>Check to see if what you are reading is <span class="decorated">truthful</span> or not</p>
+  </div>
+  <div class="bannerInput">
+    <textarea class="input" id="input" placeholder="Want to know if it's true? Past a link or URL"></textarea>
+    <textarea class="input" id="key" placeholder="Authorization"></textarea>
+    <button id="submit"><h3>Submit</h3></button>
+  </div>
+</section>
+{% endblock %}
+
+<script>
+  document.getElementById("submit").addEventListener("click", () => {
+    const input = document.getElementById("input").value;
+    const key = document.getElementById("key").value;
+
+    fetch("/api/check", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: input, key: key }),
+    })
+      .then((response) => response.json())
+      .then((data) => alert("Result: " + data.result))
+      .catch((err) => alert("Error: " + err));
+  });
+</script>

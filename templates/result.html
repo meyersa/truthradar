@@ -1,0 +1,13 @@
+{% extends "layout.html" %} {% title %}{{ result.title}}{% endblock %} {% include 'components/loading_radar.html' %}
+
+<section class="banner">
+  <div class="resultText">
+    <h1>{{ result.title }}</h1>
+    <p><span class="link">{{ result.title }}</span></p>
+    <p>{{ result.reason }}</p>
+  </div>
+  <div class="score">
+    <p>{{ result.score }}</p>
+  </div>
+</section>
+{% endblock %}
