@@ -1,13 +1,50 @@
-{% extends "layout.html" %} {% block title %}{{ result.title}}{% endblock %} {% include 'components/loading_radar.html' %}
-
+{% extends "layout.html" %} {% block title %}{{ result.title}}{% endblock %} {% block content %}
 <section class="banner">
   <div class="resultText">
     <h1>{{ result.title }}</h1>
-    <p><span class="link">{{ result.title }}</span></p>
+    {% if result.link %}
+    <p><span class="link">{{ result.link }}</span></p>
+    {% endif %}
     <p>{{ result.reason }}</p>
   </div>
-  <div class="score">
-    <p>{{ result.score }}</p>
+  <div class="resultScore">
+    {% if result.result < 33 %}
+    <h2 id="truth">Truth</h2>
+    <p id="result"><span id="truth">{{ result.result }}</span>/100</p>
+    {% elif result.result <= 66 %}
+    <h2 id="maybe_truth">Maybe Truth</h2>
+    <p id="result"><span id="maybe_truth">{{ result.result }}</span>/100</p>
+    {% else %}
+    <h2 id="not_truth">Not Truth</h2>
+    <p id="result"><span id="not_truth">{{ result.result }}</span>/100</p>
+    {% endif %}
+    <p>
+      Scores closer to 0 indicate higher likelihood of truth. Scores between 33-66 suggest uncertainty. Scores above 66
+      indicate it's likely not true.
+    </p>
   </div>
 </section>
+<style>
+  .resultScore {
+    flex-basis: 75%;
+  }
+  #truth {
+    color: green;
+  }
+  #maybe_truth {
+    color: yellowgreen;
+  }
+  #not_truth {
+    color: red;
+  }
+  #result {
+    font-size: 300%;
+
+}
+.resultScore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>
 {% endblock %}
