@@ -56,7 +56,8 @@ def query(content: str) -> list[int, str]:
 
     prompt = f"""
     You are a content moderator. Your job is to be as fair as possible. Given the following content, provide:
-    - result: an integer score between 0 (not fake) to 100 (definitely fake)
+
+    - result: an integer score between 0 (the **truth**) to 100 (definitely **fake**)
     - reason: a short explanation, less than 750 characters
 
     Respond ONLY in JSON format like: {{"result": int, "reason": string}}.
