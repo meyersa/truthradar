@@ -69,5 +69,6 @@ def query(content: str) -> list[int, str]:
         input=prompt
     )
 
+    logging.debug(f"Received response back from ChatGPT", response.output_text)
     data = json.loads(response.output_text)
     return [data['result'], data['reason']]
