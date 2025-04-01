@@ -4,6 +4,7 @@ import re
 from urllib.parse import urlparse
 import requests
 from bs4 import BeautifulSoup
+from lib.types import Result
 
 def clean_input(content: str) -> str | None: 
     """
@@ -92,25 +93,35 @@ def parse_site(url: str) -> str | None:
     logging.info(f"Parsed website for final char of {len(cleaned_content)}")
     return cleaned_content
 
-def get_input(content: str) -> str | None: 
+def get_input(inResult: Result) -> Result | None: 
     """
     Processes the given input by:
     - Cleaning the input
     - If it's a valid URL, downloads and parses the website content
 
-    :param content: The input string to process.
-    :returns: Cleaned input text or parsed website text if input is a URL, else None if failed.
+    :param content: The input result to process.
+    :returns: Filled in result
     """
-    cleaned = clean_input(content)
+    if not inResult or type(inResult) is not Result: 
+        logging.warning("Input was not a result")
+        return None 
+    
+    cleaned = clean_input(inResult.input)
     if not cleaned:
         logging.warning("Input cleaning failed or resulted in empty content.")
         return None
 
     if is_url(cleaned):
+        inResult.link = cleaned
         parsed = parse_site(cleaned)
+
         if not parsed:
             logging.warning("URL parsing failed.")
             return None
-        return parsed
 
-    return cleaned
+        # This is the new content to return
+        cleaned = parsed
+
+    # Assign and return
+    inResult.content = cleaned
+    return inResult

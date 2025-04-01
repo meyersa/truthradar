@@ -1,4 +1,5 @@
 from lib.parsing import clean_input, is_url, parse_site, get_input
+from lib.types import Result
 import unittest
 
 
@@ -61,24 +62,32 @@ class TestParseSite(unittest.TestCase):
 
 
 class TestGetInput(unittest.TestCase):
+    def setUp(self) -> None:
+        self.result = Result(id=12345, input="")
+
     def test_normal_input(self):
-        content = ' Hello <world>! '
-        result = get_input(content)
-        self.assertEqual(result, 'Hello ltworldgt')
+        self.result.input = ' Hello <world>! '
+        result = get_input(self.result)
+        self.assertEqual(result.content, 'Hello ltworldgt')
 
     def test_non_url_text(self):
-        content = 'This is just normal text input'
-        result = get_input(content)
-        self.assertEqual(result, 'This is just normal text input')
+        self.result.input = 'This is just normal text input'
+        result = get_input(self.result)
+        self.assertEqual(result.content, 'This is just normal text input')
 
     def test_url_input(self):
-        url = "https://www.example.com"
-        result = get_input(url)
-        self.assertIsInstance(result, str)
-        self.assertTrue(len(result) > 0)
+        self.assertIsNone(self.result.link)
+
+        self.result.input = "https://www.example.com"
+        result = get_input(self.result)
+
+        self.assertIsNotNone(result.link)
+        self.assertIsInstance(result.content, str)
+        self.assertTrue(len(result.content) > 0)
 
     def test_empty_input(self):
-        result = get_input("")
+        self.result.input = ""
+        result = get_input(self.result)
         self.assertIsNone(result)
 
     def test_none_input(self):
