@@ -59,16 +59,23 @@ def query(content: str) -> list[int, str]:
     logging.info(f"Summarizing from ChatGPT")
 
     prompt = f"""
-    You are a content moderator. Your job is to be as fair as possible. Given the following content, provide:
+    You are a fair and impartial content moderator. Given the following content, assess its truthfulness and provide:
 
-    - result: an integer score between 0 (the **truth**) to 100 (definitely **fake**)
-    - reason: a short explanation, less than 750 characters
+    - result: an integer score from 0 to 100, where:
+    - 0 means completely true
+    - 1-32 suggests likely true
+    - 33-66 indicates uncertainty or mixed truth
+    - 67-99 suggests likely false
+    - 100 means completely false
+
+    - reason: a concise explanation (under 750 characters)
 
     Respond ONLY in JSON format like: {{"result": int, "reason": string}}.
 
     Content:
     {content}
     """
+
     response = openai.responses.create(
         model="gpt-3.5-turbo",
         input=prompt
