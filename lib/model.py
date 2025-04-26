@@ -47,10 +47,14 @@ def predict(res: Result) -> Result | None:
             logging.error(f"Prediction API call failed. Status: {response.status_code}, Response: {response.text}")
             return None
 
-        predictions = response.json()
+        predictions = response.json().get("predictions")
+
+        if not predictions: 
+            logging.error(f"Prediction API call failed. Empty predictions")
+            return None
 
         # Attach predictions to Result
-        res.predictions = predictions
+        res.predictions.extend(predictions)
         logging.info(f"Prediction successful for {res.id}: {predictions}")
 
         return res

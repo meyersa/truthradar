@@ -33,7 +33,7 @@ def fill_gpt(res: Result) -> Result | None:
     
     res.title = title 
     res.reason = reason 
-    res.predictions = dict({"name": "ChatGPT3.5Turbo", "score": score, "duration_ms": duration_ms})
+    res.predictions = list([{"name": "ChatGPT3.5Turbo", "score": score, "duration_ms": duration_ms}])
 
     logging.info("Returning result with summarization")
     return res
