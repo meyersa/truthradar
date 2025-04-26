@@ -12,17 +12,27 @@
     </p>
   </div>
   <div class="resultScore">
-    {% if result.result < 33 %}
-    <h2 id="truth">Truth</h2>
-    <p id="result"><span id="truth">{{ result.result }}</span>/100</p>
-    {% elif result.result <= 66 %}
-    <h2 id="maybe_truth">Maybe Truth</h2>
-    <p id="result"><span id="maybe_truth">{{ result.result }}</span>/100</p>
+    {% if result.predictions %}
+      {% for prediction in result.predictions %}
+        <div class="modelScore">
+          {% set score = prediction.score * 100 %}
+          {% if score < 33 %}
+            <h2 id="truth">{{ prediction.name }}</h2>
+            <p id="result"><span id="truth">{{ score | round(1) }}</span>/100</p>
+          {% elif score <= 66 %}
+            <h2 id="maybe_truth">{{ prediction.name }}</h2>
+            <p id="result"><span id="maybe_truth">{{ score | round(1) }}</span>/100</p>
+          {% else %}
+            <h2 id="not_truth">{{ prediction.name }}</h2>
+            <p id="result"><span id="not_truth">{{ score | round(1) }}</span>/100</p>
+          {% endif %}
+          <p class="duration">({{ prediction.duration_ms | round(1) }}ms)</p>
+        </div>
+      {% endfor %}
     {% else %}
-    <h2 id="not_truth">Not Truth</h2>
-    <p id="result"><span id="not_truth">{{ result.result }}</span>/100</p>
+      <p>No predictions available.</p>
     {% endif %}
-  </div>
+  </div>  
 </section>
 <style>
   .resultScore {
