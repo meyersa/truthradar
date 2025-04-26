@@ -50,7 +50,8 @@ def is_url(content: str) -> bool:
     parsed_url = urlparse(content)
     full_url = all([parsed_url.scheme, parsed_url.netloc])
 
-    logging.info(f"Input {"is" if full_url else "is not"} a URL")
+    url_p = "is" if full_url else "is not"
+    logging.info(f"Input {url_p} a URL")
     return full_url
 
 

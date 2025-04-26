@@ -1,86 +1,64 @@
 from lib.types import Result
 import logging
-import openai
-import json
+import requests
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
-def test(res: Result) -> Result | None:
+MODEL_API = os.getenv("MODEL_API")
+MODEL_API_KEY = os.getenv("MODEL_API_KEY")
+
+if not MODEL_API:
+    raise ValueError("Cannot be missing Model API Env")
+
+def predict(res: Result) -> Result | None:
     """
-    Get the result about truth from a model
+    Sends a text input to the Model API and attaches the predictions to a Result.
+
+    :param res: Result object containing at least an 'id' and 'content'.
+    :return: Updated Result with 'predictions' field populated, or None if prediction failed.
     """
-    logging.info(f"Getting result for {res.id}")
+    try:
+        logging.info(f"Starting prediction for result ID: {res.id}")
 
-    [result, reason] = query(res.content)
+        # Ensure MODEL_API starts with http/https
+        if not MODEL_API.startswith("http"):
+            url = f"http://{MODEL_API}/predict"
+        else:
+            url = f"{MODEL_API.rstrip('/')}/predict"
 
-    result = int(result) 
-    reason = str(reason) 
+        payload = {
+            "text": res.content
+        }
 
-    if not verify_result(result):
-        logging.warn(f"Unable to verify the result from the model:\n{result}")
+        headers = {
+            "Content-Type": "application/json"
+        }
+
+        if MODEL_API_KEY:
+            headers["X-API-Key"] = MODEL_API_KEY
+
+        logging.debug(f"Sending request to {url} with payload: {payload}")
+
+        response = requests.post(url, json=payload, headers=headers, timeout=10)
+
+        if response.status_code != 200:
+            logging.error(f"Prediction API call failed. Status: {response.status_code}, Response: {response.text}")
+            return None
+
+        predictions = response.json().get("predictions")
+
+        if not predictions: 
+            logging.error(f"Prediction API call failed. Empty predictions")
+            return None
+
+        # Attach predictions to Result
+        res.predictions.extend(predictions)
+        logging.info(f"Prediction successful for {res.id}: {predictions}")
+
+        return res
+
+    except Exception as e:
+        logging.exception(f"Prediction failed for {res.id}: {e}")
         return None
-    
-    if not verify_reason(reason): 
-        logging.warn(f"Unable to verify the reason from the model:\n{reason}")
-        return None
-
-    logging.info("Returning result with summarization")
-
-    res.result = result
-    res.reason = reason
-    return res
-
-
-def verify_result(result: int) -> bool:
-    """
-    Verify an inputted result to be within spec 
-    """
-    if type(result) is not int:
-        return False
-
-    return 0 <= result <= 100
-
-
-def verify_reason(reason: str) -> bool:
-    """
-    Verify an inputted reason is within spec
-    """
-    if type(reason) is not str:
-        return False
-
-    return 0 < len(reason) < 1000
-
-
-def query(content: str) -> list[int, str]:
-    """
-    Query ChatGPT to assign a result score and reason to the given result
-    """
-    logging.info(f"Summarizing from ChatGPT")
-
-    prompt = f"""
-    You are a fair and impartial content moderator. Given the following content, assess its truthfulness and provide:
-
-    - result: an integer score from 0 to 100, where:
-    - 0 means completely true
-    - 1-32 suggests likely true
-    - 33-66 indicates uncertainty or mixed truth
-    - 67-99 suggests likely false
-    - 100 means completely false
-
-    - reason: a concise explanation (under 750 characters)
-
-    Respond ONLY in JSON format like: {{"result": int, "reason": string}}.
-
-    Content:
-    {content}
-    """
-
-    response = openai.responses.create(
-        model="gpt-3.5-turbo",
-        input=prompt
-    )
-
-    logging.debug(f"Received response back from ChatGPT", response.output_text)
-    data = json.loads(response.output_text)
-    return [data['result'], data['reason']]

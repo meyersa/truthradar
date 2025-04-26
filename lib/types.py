@@ -25,9 +25,9 @@ class Result:
     link: Optional[str] = None
     content: Optional[str] = None
 
-    # Fill with title step
+    # Filled by ChatGPT
     title: Optional[str] = None
-
-    # From Response
-    result: Optional[int] = None
     reason: Optional[str] = None
+    
+    # From API
+    predictions: Optional[list] = None

@@ -12,7 +12,7 @@ class TestResult(unittest.TestCase):
         self.assertIsNone(res.link)
         self.assertIsNone(res.content)
         self.assertIsNone(res.title)
-        self.assertIsNone(res.result)
+        self.assertIsNone(res.predictions)
         self.assertIsNone(res.reason)
 
 
