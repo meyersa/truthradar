@@ -2,9 +2,9 @@ import hashlib
 import logging
 import os
 from pymongo import MongoClient
-from lib.model import test
+from lib.model import predict
 from lib.parsing import get_input
-from lib.title import get_title
+from lib.chatgpt import fill_gpt
 from lib.types import Result
 from dotenv import load_dotenv
 
@@ -27,17 +27,17 @@ def create_result(input: str) -> str:
 
     res = get_input(res)
     if not res: 
-        logging.warn("Failed to get input")
+        logging.warning("Failed to get input")
         return None 
     
-    res = get_title(res)
+    res = fill_gpt(res) 
     if not res: 
-        logging.warn("Failed to get title")
+        logging.warning("Failed to get result from ChatGPT")
         return None 
     
-    res = test(res)
+    res = predict(res)
     if not res: 
-        logging.warn("Failed to run test")
+        logging.warning("Failed to run test")
         return None 
     
     logging.info(f"Result created for: {id}")
