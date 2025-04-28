@@ -1,65 +1,194 @@
-{% extends "layout.html" %} {% block title %}{{ result.title}}{% endblock %} {% block content %}
+{% extends "layout.html" %}
+{% block title %}{{ result.title }}{% endblock %}
+{% block content %}
 <section class="banner">
   <div class="resultText">
     <h1>{{ result.title }}</h1>
     {% if result.link %}
-    <p><span class="link">{{ result.link }}</span></p>
+      <p><span class="link">{{ result.link }}</span></p>
     {% endif %}
     <p>{{ result.reason }}</p>
     <p class="mute">
-      Scores closer to 0 indicate higher likelihood of truth. Scores between 33-66 suggest uncertainty. Scores above 66
-      indicate it's likely not true.
+      Scores closer to 0 indicate higher likelihood of truth. Scores between 33–66 suggest uncertainty. Scores above 66 indicate it's likely not true.
     </p>
   </div>
+
   <div class="resultScore">
-    {% if result.predictions %}
-      {% for prediction in result.predictions %}
-        <div class="modelScore">
-          {% set score = prediction.score * 100 %}
-          {% if score < 33 %}
-            <h2 id="truth">{{ prediction.name }}</h2>
-            <p id="result"><span id="truth">{{ score | round(1) }}</span>/100</p>
-          {% elif score <= 66 %}
-            <h2 id="maybe_truth">{{ prediction.name }}</h2>
-            <p id="result"><span id="maybe_truth">{{ score | round(1) }}</span>/100</p>
-          {% else %}
-            <h2 id="not_truth">{{ prediction.name }}</h2>
-            <p id="result"><span id="not_truth">{{ score | round(1) }}</span>/100</p>
-          {% endif %}
-          <p class="duration">({{ prediction.duration_ms | round(1) }}ms)</p>
+    <div class="score-header">
+      {% if avg_score < 33 %}
+        <span class="label label-true">Likely Truth</span>
+      {% elif avg_score <= 66 %}
+        <span class="label label-maybe">Maybe?</span>
+      {% else %}
+        <span class="label label-fake">Likely Fake</span>
+      {% endif %}
+      <span class="avg-score">{{ avg_score }}%</span>
+    </div>
+
+    <div class="score-box">
+      <div class="graph-inner">
+        <div class="grid-layer"></div> <!-- moved inside -->
+        <div class="middle-layer"></div>
+        <div class="plot-layer">
+          {% for prediction in result.predictions %}
+            {% set x = (prediction.duration_ms / max_duration_ms) * 100 %}
+            {% set y = (1 - prediction.score) * 100 %}
+            <div class="dot-label" style="left:{{ x * 0.8 + 10 }}%; bottom:{{ y * 0.8 + 10 }}%;">
+              {{ prediction.name }}
+            </div>
+            {% if prediction.score < 0.33 %}
+              <div class="dot dot-true" style="left:{{ x * 0.8 + 10 }}%; bottom:{{ y * 0.8 + 10 }}%;"></div>
+            {% elif prediction.score <= 0.66 %}
+              <div class="dot dot-maybe" style="left:{{ x * 0.8 + 10 }}%; bottom:{{ y * 0.8 + 10 }}%;"></div>
+            {% else %}
+              <div class="dot dot-fake" style="left:{{ x * 0.8 + 10 }}%; bottom:{{ y * 0.8 + 10 }}%;"></div>
+            {% endif %}
+          {% endfor %}
         </div>
-      {% endfor %}
-    {% else %}
-      <p>No predictions available.</p>
-    {% endif %}
-  </div>  
+
+        <div class="x-labels">
+          <span>0 ms</span>
+          <span>Duration</span>
+          <span>{{ max_duration_ms | round(1) }} ms</span>
+        </div>
+
+        <div class="y-labels">
+          <span>Likely Fake</span>
+          <span>Maybe?</span>
+          <span>Likely Truth</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
+
 <style>
   .resultScore {
+    background: url('/static/stormy.png') no-repeat center center;
+    background-size: cover;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(60,64,67,0.3), 0 4px 8px rgba(60,64,67,0.15);
     flex-basis: 75%;
-  }
-  #truth {
-    color: green;
-  }
-  #maybe_truth {
-    color: yellowgreen;
-  }
-  #not_truth {
-    color: red;
-  }
-  #result {
-    font-size: 300%;
-    margin: 0;
-  }
-  .resultScore {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  .link {
-    font-style: italic;
-
+    margin-bottom: 20px;
+    backdrop-filter: blur(15px);
   }
 
+  .score-header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 1.6em;
+    padding-bottom: 1rem;
+    font-weight: bold;
+  }
+
+  .score-box {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    flex-grow: 1;
+  }
+
+  .graph-inner {
+    position: relative;
+    width: 80%;
+    height: 85%;
+    top: 7%;
+    left: 10%;
+    z-index: 1;
+    background-color: var(--light);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .grid-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+      linear-gradient(to bottom, var(--grey) 2px, transparent 2px),
+      linear-gradient(to right, var(--grey) 2px, transparent 2px);
+    background-size: 5% 5%;
+    z-index: 0;
+    opacity: 0.2;
+  }
+
+  .middle-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .plot-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+  }
+
+  .dot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    transform: translate(-50%, 50%);
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  }
+
+  .dot-label {
+    position: absolute;
+    font-size: 0.7em;
+    color: var(--grey);
+    white-space: nowrap;
+    transform: translate(-50%, -150%);
+    z-index: 3;
+  }
+
+  .dot-true { background: var(--lightgreen); }
+  .dot-maybe { background: var(--orange); }
+  .dot-fake { background: var(--red); }
+
+  .x-labels {
+    position: absolute;
+    bottom: -24px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    color: var(--grey);
+    z-index: 4;
+  }
+
+  .y-labels {
+    position: absolute;
+    top: 0;
+    left: -60px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 0.9em;
+    color: var(--grey);
+    text-align: right;
+    z-index: 4;
+  }
+
+  .label-true { color: var(--lightgreen); }
+  .label-maybe { color: var(--orange); }
+  .label-fake { color: var(--red); }
+  .avg-score { font-size: 1.2em; color: var(--red); }
 </style>
 {% endblock %}
