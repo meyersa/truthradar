@@ -32,8 +32,23 @@ def result():
     if not res:
         return render_template("404.html", back=True)
 
-    return render_template("result.html", result=get_result(id), back=True)
+    # calculate average score
+    if res.predictions and res.predictions:
+        scores = [pred['score'] for pred in res.predictions]
+        durations = [pred['duration_ms'] for pred in res.predictions]
+        avg_score = round(sum(scores) / len(scores) * 100, 1)  # 0-100 scale
+        max_duration_ms = round(max(durations) * 1.1, 1)  # 10% padding
+    else:
+        avg_score = 0
+        max_duration_ms = 100  # default
 
+    return render_template(
+        "result.html",
+        result=res,
+        avg_score=avg_score,
+        max_duration_ms=max_duration_ms,
+        back=True
+    )
 
 @app.route('/api/check', methods=['POST'])
 def check():
@@ -60,4 +75,4 @@ def check():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
