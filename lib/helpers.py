@@ -97,8 +97,9 @@ def get_recent(num: int = 3) -> list[Result] | None:
     results = []
 
     for doc in docs:
-        doc.pop("_id", None)  # Remove MongoDB's _id
-        results.append(Result(**doc))
+        if doc:
+            doc.pop("_id", None)  # Remove MongoDB's _id
+            results.append(Result(**doc))
 
     logging.info(f"Returning {num} recent results from Mongo")
     return results if results else None

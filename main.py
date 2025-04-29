@@ -20,10 +20,15 @@ def home():
     """
     recent_items = get_recent_cached()
     p_items = []
-    for item in recent_items: 
-        avg_score = round(sum([prediction.get("score") for prediction in item.predictions]) / len(item.predictions) * 100)
 
-        p_items.append({"score": avg_score, "title": item.title, "id": item.id })
+    # In case it's purged
+    if not recent_items:
+        return render_template("index.html")
+
+    for item in recent_items: 
+        if item:
+            avg_score = round(sum([prediction.get("score") for prediction in item.predictions]) / len(item.predictions) * 100)
+            p_items.append({"score": avg_score, "title": item.title, "id": item.id })
 
     return render_template("index.html", recent=p_items)
 
@@ -82,4 +87,8 @@ def check():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    if os.getenv("dev"):
+        app.run(debug=True)
+    
+    else:
+        app.run()
