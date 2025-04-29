@@ -23,7 +23,7 @@ body {
 }
 
 body {
-  min-height: 100dvh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -60,7 +60,7 @@ section.banner > div:first-child {
 
 section.banner > div:last-child {
   flex-grow: 2;
-  min-width: 30dvw;
+  min-width: 30vw;
   z-index: 5;
 }
 
@@ -100,6 +100,6 @@ i:hover {
   }
   section.banner {
     flex-direction: column;
-    margin: 1.5rem;
+    margin: 0 1.5rem;
   }
 }
