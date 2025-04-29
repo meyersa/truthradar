@@ -1,65 +1,78 @@
 <div class="recentWrapper">
     <h2>Recent Predictions</h2>
     <div class="recentItems">
-        {% for result in recent %}
-        <a class="recentItem" href="/result?id={{ result.id }}">
-            <p class="recentTitle">{{ result.title }}</p>
-            <span class="recentScore">{{ result.score }}%</span>
-        </a>
-        {% endfor %}
+      {% for result in recent %}
+      <a class="recentItem" href="/result?id={{ result.id }}">
+        <p class="recentTitle">{{ result.title }}</p>
+        <span class="recentScore" 
+          style="
+            color: 
+            {% if result.score < 33 %}
+              var(--lightgreen)
+            {% elif result.score <= 66 %}
+              var(--orange)
+            {% else %}
+              var(--red)
+            {% endif %}
+            ;
+          ">
+          {{ result.score }}% Fake
+        </span>
+      </a>
+      {% endfor %}
     </div>
-</div>
-
-<style>
+  </div>
+  
+  <style>
     .recentItems {
-        display: flex;
-        gap: 1rem;
-        width: 100%;
-        height: 20dvh;
-        overflow: hidden;
+      display: flex;
+      gap: 1rem;
+      width: 100%;
+      height: 20dvh;
+      overflow: hidden;
     }
-
+  
     .recentItem {
-        width: 33%;
-        scroll-snap-align: start;
-        display: flex;
-        flex-direction: column;
-        background-color: var(--dark);
-        padding: 1rem;
-        border-radius: 5px;
-        align-items: center;
-        text-decoration: none;
-        color: inherit;
-        overflow: hidden;
-        z-index: 1;
-        justify-content: space-between;
+      width: 33%;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--dark);
+      padding: 1rem;
+      border-radius: 5px;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      overflow: hidden;
+      z-index: 1;
+      justify-content: space-between;
     }
-
+  
     .recentScore {
-        color: var(--green);
-        font-weight: bolder;
-        font-size: 150%;
+      font-weight: bolder;
+      font-size: 150%;
     }
-
+  
     .recentTitle {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        max-height: 10dvh;
-        max-width: 100%;
-        text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      max-height: 10dvh;
+      max-width: 100%;
+      text-align: center;
     }
-
+  
     @media (max-width: 480px) {
-        .recentItems {
-            overflow-x: auto;
-            overflow-y: hidden;
-            scroll-snap-type: x mandatory;
-        }
-        .recentItem {
-            min-width: 50%;
-        }
+      .recentItems {
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+      }
+      .recentItem {
+        min-width: 50%;
+      }
     }
-</style>
+  </style>
+  
