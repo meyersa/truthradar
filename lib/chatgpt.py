@@ -100,10 +100,8 @@ def query(content: str) -> list[float, str, str]:
         - 0.33-0.66 indicates uncertainty or mixed truth
         - 0.67-0.99 suggests likely false
         - 1.0 means completely false
-
-    - reason: a concise explanation (under 750 characters) of why you gave that score.
-
-    - title: a short summary title (5-50 characters) covering the key idea(s) of the content.
+    - reason: a concise explanation (under 600 characters) of why you gave that score.
+    - title: a short summary title (5-30 characters) covering the key idea(s) of the content.
 
     Respond ONLY in JSON format like: {{"score": float, "reason": string, "title": string}}.
 
