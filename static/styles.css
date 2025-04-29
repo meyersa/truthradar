@@ -4,6 +4,7 @@
   --lightgreen: mediumseagreen;
   --green: seagreen;
   --light: rgb(251, 253, 251);
+  --dark: rgb(227, 231, 227);
   --background: rgb(244, 247, 244);
   --grey: darkgrey;
 }
@@ -89,7 +90,6 @@ i:hover {
 @media (max-width: 480px) {
   h1 {
     font-size: 200%;
-    background: linear-gradient(var(--green) 0 7.5px, transparent 0) no-repeat bottom / 35% 7.5px;
     padding-bottom: 5%;
   }
   img.bannerImg {
@@ -100,7 +100,6 @@ i:hover {
   }
   section.banner {
     flex-direction: column;
-    text-align: center;
     margin: 1.5rem;
   }
 }
