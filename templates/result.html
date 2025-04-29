@@ -6,7 +6,7 @@
     <p><span class="link">{{ result.link }}</span></p>
     {% endif %}
     <h2 id="resultScoreText" class="resultScore">
-      {% if avg_score < 33 %} Likely Truth {% elif avg_score <= 66 %} Maybe True {% else %} Fake {% endif %}
+      {% if avg_score < 33 %} Likely Truth ✅ {% elif avg_score <= 66 %} Maybe True ⚠️ {% else %} Fake ❌ {% endif %}
     </h2>
     <p>{{ result.reason }}</p>
     <p class="mute">
