@@ -5,14 +5,16 @@ from urllib.parse import urlparse
 import requests
 from bs4 import BeautifulSoup
 from lib.types import Result
+import os 
 
+MAX_WEB_LENGTH = os.getenv("MAX_WEB_LENGTH", 5000)
 
 def clean_input(content: str) -> str | None:
     """
     Cleans the input string by:
     - Stripping leading/trailing spaces
     - Escaping HTML characters
-    - Limiting length to 1000 characters
+    - Limiting length to 5000 characters
     - Removing unwanted special characters
 
     :param content: The input string to be cleaned.
@@ -26,7 +28,7 @@ def clean_input(content: str) -> str | None:
 
         content = str(content).strip()
         content = html.escape(content)
-        content = content[:1000]
+        content = content[:MAX_WEB_LENGTH]
         content = re.sub(r'[^\w\s.:/-]', '', content)
 
     except Exception as e:
@@ -57,47 +59,73 @@ def is_url(content: str) -> bool:
 
 def parse_site(url: str) -> str | None:
     """
-    Downloads and parses a website from the given URL.
-    Extracts visible text content and cleans it.
+    Downloads and parses a website using `requests`.
+    Extracts and aggressively cleans visible text content.
 
     :param url: The URL of the website to parse.
     :returns: Cleaned extracted text if successful, else None.
     """
     logging.info(f"Starting parse for site: {url}")
 
-    res = None
     try:
-        logging.debug(f"Downloading site: {url}")
-        res = requests.get(url, headers={
-                           "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"})
-        if not res.ok:
-            logging.warn(f"Failed to get website:\n{res.content}")
-            raise ValueError("Unable to download")
+        headers = {
+            "User-Agent": (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+            )
+        }
+        logging.debug("Sending GET request...")
+        res = requests.get(url, headers=headers, timeout=5)
+        res.raise_for_status()
+        logging.info(f"Downloaded {len(res.text)} characters from {url}")
 
-        logging.debug(f"Downloaded site: {url}")
-
-    except Exception as e:
-        logging.error(f"Unable to download website:\n{e}")
+    except requests.RequestException as e:
+        logging.error(f"Request failed for {url}: {e}")
         return None
 
-    content = None
     try:
-        logging.debug(f"Parsing site: {url}")
         soup = BeautifulSoup(res.text, "html.parser")
-        content = soup.get_text()
 
-        if not content or len(content) < 10:
-            raise ValueError("Unable to parse text from site")
+        # Remove non-content tags
+        for tag in soup(["script", "style", "noscript", "iframe", "svg", "canvas", "form", "footer", "header", "nav", "aside", "video", "img"]):
+            tag.decompose()
 
-        logging.debug(f"Parsed site for {len(content)} chars")
+        # Remove likely cookie/popup divs
+        for div in soup.find_all(lambda t: t.name == "div" and any(
+            kw in (t.get("id", "") + str(t.get("class", "")).lower())
+            for kw in ["cookie", "consent", "banner", "popup", "overlay", "subscribe", "ad", "paywall", "notification"]
+        )):
+            div.decompose()
+
+        # Remove elements that aren't displayed
+        for elem in soup.find_all(style=lambda value: value and "display:none" in value.replace(" ", "").lower()):
+            elem.decompose()
+
+        # Remove data hidden elements
+        for elem in soup.find_all(attrs={"aria-hidden": "true"}):
+            elem.decompose()
+
+        logging.debug("Extracting text from cleaned soup...")
+        text = soup.get_text(separator=' ', strip=True)
+        text = re.sub(r'\s+', ' ', text).strip()
+        text = re.sub(r'[^\x00-\x7F]+', ' ', text)
+        text = text.replace("  ", " ")
+        text = text.replace(". ", ".")
+        
+        if len(text) < 10:
+            logging.warning(
+                f"Extracted text too short from {url} ({len(text)} chars)")
+            return None
+
+        cleaned_content = clean_input(text)
+        if cleaned_content:
+            logging.info(
+                f"Final cleaned content length: {len(cleaned_content)}")
+        return cleaned_content
 
     except Exception as e:
-        logging.error(f"Unable to parse website:\n{e}")
+        logging.error(f"Parsing failed for {url}: {e}")
         return None
-
-    cleaned_content = clean_input(content)
-    logging.info(f"Parsed website for final char of {len(cleaned_content)}")
-    return cleaned_content
 
 
 def get_input(inResult: Result) -> Result | None:
