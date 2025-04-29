@@ -69,6 +69,9 @@ def save_result(res: Result) -> bool:
 
     results_collection.insert_one(res.__dict__)
     logging.info(f"Saved result: {res.id}")
+
+    get_recent_cached.cache_clear()
+    get_result_cached.cache_clear()
     return True
 
 
