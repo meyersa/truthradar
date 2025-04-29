@@ -1,6 +1,4 @@
-{% extends "layout.html" %} 
-{% block title %}{{ result.title }}{% endblock %} 
-{% block content %}
+{% extends "layout.html" %} {% block title %}{{ result.title }}{% endblock %} {% block content %}
 <section class="banner">
   <div class="resultText">
     <h1>{{ result.title }}</h1>
@@ -8,14 +6,12 @@
     <p><span class="link">{{ result.link }}</span></p>
     {% endif %}
     <h2 id="resultScoreText" class="resultScore">
-      {% if avg_score < 33 %} Likely Truth 
-      {% elif avg_score <= 66 %} Maybe True 
-      {% else %} Fake 
-      {% endif %}
+      {% if avg_score < 33 %} Likely Truth {% elif avg_score <= 66 %} Maybe True {% else %} Fake {% endif %}
     </h2>
     <p>{{ result.reason }}</p>
     <p class="mute">
-      Scores closer to 0 indicate higher likelihood of truth. Scores between 33-66 suggest uncertainty. Scores above 66 indicate it's likely not true.
+      Scores closer to 0 indicate higher likelihood of truth. Scores between 33-66 suggest uncertainty. Scores above 66
+      indicate it's likely not true.
     </p>
   </div>
 
@@ -25,18 +21,18 @@
 
     <div class="predictionLegend">
       {% for prediction in result.predictions %}
-        <div class="predictionItem">
-          <span class="colorDot" style="background-color: var(
-            {% if prediction.score < 0.33 %}
-              --lightgreen
-            {% elif prediction.score <= 0.66 %}
-              --orange
-            {% else %}
-              --red
-            {% endif %}
-          );"></span>
-          {{ prediction.name }} ({{ (prediction.score * 100) | round(1) }}%)
-        </div>
+      <div class="predictionItem">
+        <span
+          class="colorDot"
+          style="
+            background-color: var(
+              {% if prediction.score < 0.33 %} --lightgreen {% elif prediction.score <= 0.66 %} --orange {% else %}
+                --red {% endif %}
+            );
+          "
+        ></span>
+        {{ prediction.name }} ({{ (prediction.score * 100) | round(1) }}%)
+      </div>
       {% endfor %}
     </div>
   </div>
@@ -85,7 +81,12 @@
   }
 </style>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"
+  integrity="sha512-CQBWl4fJHWbryGE+Pc7UAxWMUMNMWzWxF4SQo9CgkJIN1kx6djDQZjh3Y8SZ1d+6I+1zze6Z7kHXO7q3UyZAWw=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
 <script>
   function getComputedColor(variable) {
     return getComputedStyle(document.documentElement).getPropertyValue(variable).trim();
