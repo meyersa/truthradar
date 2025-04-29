@@ -81,7 +81,7 @@ i:hover {
   position: fixed;
   bottom: 0;
   right: 0;
-  transform: translateX(45%) translateY(30%) scale(1.5);
+  transform: translateX(30%) translateY(30%) scale(1.5);
   overflow: hidden;
   pointer-events: none;
   filter: opacity(0.5)
