@@ -7,7 +7,8 @@
       Using <span class="decorated">Machine Learning</span> we can determine the truth and get to the bottom of claims
       made online.
     </p>
-    <img class="bannerImg" src="{{ url_for('static', filename='demo.png') }}" height="300" />
+    {% include 'components/recent.html' %}
+
   </div>
   <div class="bannerInput">
     <textarea class="input" id="input" placeholder="Want to know if it's true? Past a link or URL"></textarea>

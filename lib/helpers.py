@@ -74,6 +74,21 @@ def get_result(id: int) -> Result | None:
     logging.info(f"Unable to find result: {id}")
     return None
 
+def get_recent(num: int = 3) -> list[Result] | None:
+    """
+    Gets a list of recent results
+    """
+    logging.info(f"Getting {num} recent results from Mongo")
+
+    docs = results_collection.find().sort("_id", -1).limit(num)
+    results = []
+
+    for doc in docs:
+        doc.pop("_id", None)  # Remove MongoDB's _id
+        results.append(Result(**doc))
+
+    logging.info(f"Returning {num} recent results from Mongo")
+    return results if results else None
 
 def hash_text(text):
     return hashlib.sha256(text.encode()).hexdigest()

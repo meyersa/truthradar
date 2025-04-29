@@ -3,7 +3,7 @@ import logging
 import sys
 import os
 from dotenv import load_dotenv
-from lib.helpers import get_result, create_result
+from lib.helpers import get_result, create_result, get_recent
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
@@ -18,7 +18,15 @@ def home():
     """
     Home page
     """
-    return render_template("index.html")
+    recent_items = get_recent()
+    p_items = []
+    for item in recent_items: 
+        print(item.predictions)
+        avg_score = round(sum([prediction.get("score") for prediction in item.predictions]) / len(item.predictions) * 100)
+
+        p_items.append({"score": avg_score, "title": item.title, "id": item.id })
+
+    return render_template("index.html", recent=p_items)
 
 
 @app.route("/result")
