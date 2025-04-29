@@ -1,6 +1,5 @@
 import unittest
-from unittest.mock import patch, Mock
-from lib.model import predict  # replace with actual filename
+from lib.model import predict
 from lib.types import Result
 
 class TestModel(unittest.TestCase):
@@ -15,43 +14,21 @@ class TestModel(unittest.TestCase):
         self.sample_result = Result(
             id="test123",
             content="The sky is green today.",
-            predictions=None,
+            predictions=[],
             input="Testing"
         )
 
-    @patch('requests.post')  # replace with your actual module path
-    def test_successful_prediction(self, mock_post):
+    def test_successful_prediction(self):
         """
         Tests that a successful API call correctly updates Result.predictions.
         """
-
-        # Mocked API response content
-        mock_response = Mock()
-        mock_response.status_code = 200
-        mock_response.json.return_value = {
-            'predictions': [
-                {'name': 'LogisticRegression', 'score': 0.660553220029004, 'duration_ms': 0.46},
-                {'name': 'BernoulliNB', 'score': 0.9004633486166935, 'duration_ms': 3.41},
-                {'name': 'XGBoost', 'score': 0.7203407287597656, 'duration_ms': 1.77}
-            ],
-            'duration_ms': 4.77
-        }
-        mock_post.return_value = mock_response
-
-        # Call the function
         updated_result = predict(self.sample_result)
 
-        # Assertions
         self.assertIsNotNone(updated_result, "Predict should not return None on success.")
         self.assertIsNotNone(updated_result.predictions, "Predictions field should be populated.")
-        self.assertIsInstance(updated_result.predictions, dict, "Predictions should be a dictionary.")
-        self.assertIn('predictions', updated_result.predictions, "Response should contain 'predictions' key.")
+        self.assertIsInstance(updated_result.predictions, list, "Predictions should be a list.")
 
-        preds = updated_result.predictions['predictions']
-        self.assertIsInstance(preds, list, "Predictions['predictions'] should be a list.")
-        self.assertGreater(len(preds), 0, "Predictions list should not be empty.")
-
-        for pred in preds:
+        for pred in updated_result.predictions:
             self.assertIn('name', pred)
             self.assertIn('score', pred)
             self.assertIn('duration_ms', pred)

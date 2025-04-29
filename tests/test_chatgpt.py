@@ -5,7 +5,7 @@ from lib.chatgpt import fill_gpt, verify_title, verify_reason, verify_score, que
 class TestChatGPT(unittest.TestCase):
     def test_fill_gpt(self):
         """
-        Test fill_gpt using the real query.
+        Test fill_gpt
         """
         res = Result(id="test123", content="The sky is blue.", predictions=[], input="Testing")
         result = fill_gpt(res)
