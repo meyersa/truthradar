@@ -7,6 +7,7 @@ from lib.parsing import get_input
 from lib.chatgpt import fill_gpt
 from lib.types import Result
 from dotenv import load_dotenv
+from functools import lru_cache
 
 load_dotenv() 
 
@@ -16,6 +17,18 @@ MONGO_DB = os.getenv("MONGO_DB")
 client = MongoClient(MONGO_URL)
 db = client[MONGO_DB]
 results_collection = db["results"]
+
+from functools import lru_cache
+
+@lru_cache(maxsize=128)
+def get_recent_cached():
+    logging.debug("Cache Hit for get_recent")
+    return get_recent()
+
+@lru_cache(maxsize=512)
+def get_result_cached(id):
+    logging.debug(f"Cache Hit for get_result {id}")
+    return get_result(id)
 
 def create_result(input: str) -> str:
     """
