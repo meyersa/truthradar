@@ -19,6 +19,9 @@ def fill_gpt(res: Result) -> Result | None:
     [score, reason, title] = query(res.content)
     duration_ms = (time.perf_counter() - start) * 1000  # milliseconds
 
+    # Work around
+    title = cap_title(title)
+
     if not verify_score(score):
         logging.warning(f"Unable to verify the score from the model:\n{score}")
         return None
@@ -37,6 +40,12 @@ def fill_gpt(res: Result) -> Result | None:
 
     logging.info("Returning result with summarization")
     return res
+
+def cap_title(inp: str, length: int=50) -> str: 
+    """
+    Caps a title to a set length 
+    """
+    return str(inp)[:length - 3] + "..."
 
 def verify_title(title: str) -> bool:
     """
