@@ -15,37 +15,76 @@
     </h2>
     <p>{{ result.reason }}</p>
     <p class="mute">
-      Scores closer to 0 indicate higher likelihood of truth. Scores between 33-66 suggest uncertainty. Scores above 66
-      indicate it's likely not true.
+      Scores closer to 0 indicate higher likelihood of truth. Scores between 33-66 suggest uncertainty. Scores above 66 indicate it's likely not true.
     </p>
   </div>
 
   <div class="resultGraph">
     <h3 id="avgScoreDisplay"></h3>
     <canvas id="resultChart"></canvas>
+
+    <div class="predictionLegend">
+      {% for prediction in result.predictions %}
+        <div class="predictionItem">
+          <span class="colorDot" style="background-color: var(
+            {% if prediction.score < 0.33 %}
+              --lightgreen
+            {% elif prediction.score <= 0.66 %}
+              --orange
+            {% else %}
+              --red
+            {% endif %}
+          );"></span>
+          {{ prediction.name }} ({{ (prediction.score * 100) | round(1) }}%)
+        </div>
+      {% endfor %}
+    </div>
   </div>
 </section>
+
 <style>
   .resultGraph {
     background-color: var(--light);
     border-radius: 10px;
     box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3), 0 4px 8px rgba(60, 64, 67, 0.15);
     flex-grow: 1;
-    padding: 0 1.5rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    height: 60dvh;
+    height: fit-content;
   }
 
   #avgScoreDisplay {
-    margin-bottom: 1rem;
+    margin: 0 0 1rem 0;
     text-align: center;
   }
 
   #resultChart {
-    max-height: 50dvh;
+    max-height: 30dvh;
+  }
+
+  .predictionLegend {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .predictionItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .colorDot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
   }
 </style>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
   function getComputedColor(variable) {
