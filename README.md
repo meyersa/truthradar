@@ -20,3 +20,5 @@ Fact checking powered by machine learning. Paste a link or text and Truth Radar 
 - `API_KEY`: To restrict usage of site
 - `MONGO_DB`: MongoDB to connect to
 - `MONGO_URL`: MongoDB URL to use to connect with
+- `MODEL_API`: Model API Server to use for querying
+- `MODEL_API_KEY`: Key for Model API Server to use
