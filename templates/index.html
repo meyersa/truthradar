@@ -54,7 +54,8 @@
     border: none;
     background-color: var(--green);
     color: var(--light);
-    flex-basis: 10%;
+    /* flex-basis: 10%; */
+    height: 3rem;
   }
   #submit:hover {
     background-color: var(--lightgreen);
@@ -100,7 +101,7 @@
       .then((data) => {
         if (data.status === "error") {
           button.style.backgroundColor = "var(--red)";
-          button.textContent = "Try Again";
+          button.innerHTML = "<h3>Try Again</h3>";
           return;
         } else {
           const id = data.id;
