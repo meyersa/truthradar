@@ -3,13 +3,13 @@
   <div class="bannerText">
     <h1>How it works</h1>
     <p>
-      TruthRadar is powered by Flask (frontend), FastAPI (backend), and a hybrid of machine learning and transformer
-      models using Scikit-learn, XGBoost, and Hugging Face Transformers. It processes datasets like LIAR, FEVER,
-      SciFact, and PHEME to detect misinformation in real time.
+      TruthRadar is powered by Flask (frontend), FastAPI (backend), and machine learning models using Scikit-learn,
+      XGBoost, and more. It processes datasets like LIAR, FEVER, SciFact, and PHEME to detect
+      misinformation in real time.
     </p>
     <ol class="workflowList">
       <li>Datasets are cleaned — contractions expanded, punctuation and stopwords removed</li>
-      <li>Models are trained (Logistic Regression, Random Forest, XGBoost, Transformers like MiniLM)</li>
+      <li>Models are trained (Logistic Regression, Random Forest, XGBoost)</li>
       <li>Vectorizers and models are serialized and served via FastAPI</li>
       <li>Flask frontend queries FastAPI and displays predictions</li>
       <li>ChatGPT summarizes the input, provides reasoning, and adds its own trust score</li>
@@ -40,7 +40,6 @@
   }
   .grey-box * {
     font-size: 90%;
-    
   }
   .workflowList {
     list-style-position: outside;

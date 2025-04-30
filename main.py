@@ -117,14 +117,6 @@ def info():
         {
             "name": "SGDClassifier",
             "description": "A linear classifier trained with stochastic gradient descent, efficient for large-scale and streaming datasets."
-        },
-        {
-            "name": "MiniLM",
-            "description": "A distilled transformer model that retains attention-based reasoning while being lightweight for efficient NLP tasks."
-        },
-        {
-            "name": "DistilBERT",
-            "description": "A compressed version of BERT retaining ~97% of its performance while being faster and smaller for language understanding tasks."
         }
     ]
     
