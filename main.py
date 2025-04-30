@@ -12,7 +12,6 @@ app = Flask(__name__)
 
 API_KEY = os.getenv("API_KEY")
 
-
 @app.route("/")
 def home():
     """
@@ -84,6 +83,52 @@ def check():
 
     logging.info(f"Returning ID: {id}")
     return jsonify({'id': id})
+
+@app.route("/info")
+def info(): 
+    """
+    Information Page
+    """
+    models_info = [
+        {
+            "name": "LogisticRegression",
+            "description": "A linear model that estimates class probabilities using a logistic function, commonly used for binary and multiclass classification."
+        },
+        {
+            "name": "BernoulliNB",
+            "description": "A Naive Bayes variant optimized for binary/boolean features, assuming feature independence and using Bernoulli distributions."
+        },
+        {
+            "name": "RandomForest",
+            "description": "An ensemble of decision trees that votes on outputs, offering strong performance and robustness to overfitting."
+        },
+        {
+            "name": "XGBoost",
+            "description": "A gradient boosting framework that builds trees sequentially to correct errors, optimized for speed and accuracy."
+        },
+        {
+            "name": "PassiveAggressive",
+            "description": "An online-learning linear classifier that updates only when it misclassifies, suitable for large-scale sparse data."
+        },
+        {
+            "name": "RidgeClassifier",
+            "description": "A linear classifier that uses L2 regularization to prevent overfitting by shrinking weights."
+        },
+        {
+            "name": "SGDClassifier",
+            "description": "A linear classifier trained with stochastic gradient descent, efficient for large-scale and streaming datasets."
+        },
+        {
+            "name": "MiniLM",
+            "description": "A distilled transformer model that retains attention-based reasoning while being lightweight for efficient NLP tasks."
+        },
+        {
+            "name": "DistilBERT",
+            "description": "A compressed version of BERT retaining ~97% of its performance while being faster and smaller for language understanding tasks."
+        }
+    ]
+    
+    return render_template("info.html", back=True, models_info=models_info)
 
 
 if __name__ == "__main__":

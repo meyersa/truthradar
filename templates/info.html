@@ -1,0 +1,62 @@
+{% extends "layout.html" %} {% block title %}Info{% endblock %} {% block content %}
+<section class="banner">
+  <div class="bannerText">
+    <h1>How it works</h1>
+    <p>
+      TruthRadar is powered by Flask (frontend), FastAPI (backend), and a hybrid of machine learning and transformer
+      models using Scikit-learn, XGBoost, and Hugging Face Transformers. It processes datasets like LIAR, FEVER,
+      SciFact, and PHEME to detect misinformation in real time.
+    </p>
+    <ol class="workflowList">
+      <li>Datasets are cleaned — contractions expanded, punctuation and stopwords removed</li>
+      <li>Models are trained (Logistic Regression, Random Forest, XGBoost, Transformers like MiniLM)</li>
+      <li>Vectorizers and models are serialized and served via FastAPI</li>
+      <li>Flask frontend queries FastAPI and displays predictions</li>
+      <li>ChatGPT summarizes the input, provides reasoning, and adds its own trust score</li>
+    </ol>
+  </div>
+  <div class="models">
+    <h2>Models Utilized</h2>
+    {% for model in models_info %}
+    <div class="grey-box">
+      <h3>{{ model.name }}</h3>
+      <p>{{ model.description }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+<style>
+  .models {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-height: 60vh;
+    overflow-y: scroll;
+  }
+  .grey-box {
+    background-color: var(--dark);
+    padding: 0 1.5rem;
+    border-radius: 5px;
+  }
+  .grey-box * {
+    font-size: 90%;
+    
+  }
+  .workflowList {
+    list-style-position: outside;
+  }
+  .workflowList li {
+    padding: 0 0 0.5rem 1rem;
+  }
+  .workflowList li::marker {
+    color: var(--green);
+    font-weight: bold;
+    margin-right: 1em;
+  }
+  @media (max-width: 480px) {
+    .models {
+      max-height: unset;
+    }
+  }
+</style>
+{% endblock %}
