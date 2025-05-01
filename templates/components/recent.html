@@ -47,6 +47,10 @@
       overflow: hidden;
       z-index: 1;
       justify-content: space-between;
+      max-height: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      scroll
     }
   
     .recentScore {
@@ -58,7 +62,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
-      -webkit-line-clamp: 3;
+      -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       max-height: 10vh;
       max-width: 100%;
@@ -70,6 +74,7 @@
         overflow-x: auto;
         overflow-y: hidden;
         scroll-snap-type: x mandatory;
+        padding-bottom: .5rem;
       }
       .recentItem {
         min-width: 50%;
