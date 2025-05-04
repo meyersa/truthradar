@@ -29,6 +29,11 @@ body {
   flex-direction: column;
 }
 
+body::selection {
+  background-color: var(--green);
+  color: var(--light)
+}
+
 h1 {
   font-size: 300%;
   font-weight: bolder;
